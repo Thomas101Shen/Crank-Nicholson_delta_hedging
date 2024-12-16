@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome file</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h3 id="report-simulating-high-frequency-american-options-data">Report: Simulating High-Frequency American Options Data</h3>
+<h4 id="objective">1. <strong>Objective</strong></h4>
+<p>The purpose of this simulation was to generate high-frequency tick-level options data (with updates every second) for research purposes. The dataset reflects realistic market dynamics based on historical benchmarks and includes information such as option prices, underlying prices, Greeks, implied volatility, and bid-ask spreads.</p>
+<hr>
+<h4 id="methodology">2. <strong>Methodology</strong></h4>
+<h5 id="underlying-asset-simulation">2.1 Underlying Asset Simulation</h5>
+<p>The underlying asset’s price was simulated using a <strong>Geometric Brownian Motion (GBM)</strong> model:</p>
+<p>[<br>
+S_{t+\Delta t} = S_t \cdot \exp\left((\mu - 0.5\sigma^2)\Delta t + \sigma\sqrt{\Delta t}Z\right)<br>
+]</p>
+<p>Where:</p>
+<ul>
+<li>(S_t): Current underlying price.</li>
+<li>(\mu): Annualized drift (expected return).</li>
+<li>(\sigma): Annualized volatility.</li>
+<li>(\Delta t): Time step size (1 second in this case).</li>
+<li>(Z): Standard normal random variable.</li>
+</ul>
+<p>Parameters:</p>
+<ul>
+<li><strong>Starting Price</strong>: $100</li>
+<li><strong>Drift</strong>: 5% annualized.</li>
+<li><strong>Volatility</strong>: 20% annualized.</li>
+<li><strong>Time Step</strong>: One second.</li>
+</ul>
+<p>This process ensures realistic price evolution over a one-hour trading window (3600 seconds).</p>
+<hr>
+<h5 id="option-price-calculation">2.2 Option Price Calculation</h5>
+<p>Option prices were calculated using the <strong>Black-Scholes Formula</strong>, which provides closed-form solutions for European-style options. While American options allow early exercise, this simulation approximates their prices using the Black-Scholes method.</p>
+<p>The formula for a call option is:<br>
+[<br>
+C = S \cdot N(d_1) - K \cdot e^{-rT} \cdot N(d_2)<br>
+]<br>
+And for a put option:<br>
+[<br>
+P = K \cdot e^{-rT} \cdot N(-d_2) - S \cdot N(-d_1)<br>
+]</p>
+<p>Where:</p>
+<ul>
+<li>(d_1 = \frac{\ln(S / K) + (r + 0.5\sigma^2)T}{\sigma\sqrt{T}})</li>
+<li>(d_2 = d_1 - \sigma\sqrt{T})</li>
+<li>(N(\cdot)): Cumulative distribution function of the standard normal distribution.</li>
+<li>(S): Current underlying price.</li>
+<li>(K): Strike price.</li>
+<li>(T): Time to expiration (in years).</li>
+<li>(r): Risk-free rate (assumed to be 5%).</li>
+<li>(\sigma): Implied volatility (assumed constant at 20%).</li>
+</ul>
+<h5 id="strike-prices-and-expirations">2.3 Strike Prices and Expirations</h5>
+<ul>
+<li>Strike prices: $95, $100, and $105.</li>
+<li>Expiration: December 20, 2024.</li>
+<li>Time to expiration ((T)) was dynamically calculated for each tick.</li>
+</ul>
+<hr>
+<h5 id="bid-ask-spread-simulation">2.4 Bid-Ask Spread Simulation</h5>
+<p>To simulate market microstructure:</p>
+<ul>
+<li>A random bid-ask spread was added to the calculated option prices.</li>
+<li>Spread values were uniformly sampled between $0.01 and $0.05.</li>
+<li>Bid price = (\text{Option Price} - \text{Spread})</li>
+<li>Ask price = (\text{Option Price} + \text{Spread})</li>
+</ul>
+<hr>
+<h5 id="data-fields">2.5 Data Fields</h5>
+<p>For each second, the dataset includes:</p>
+<ul>
+<li><strong>Timestamp</strong>: Precise second of the simulated trading day.</li>
+<li><strong>Underlying Price</strong>: Simulated using GBM.</li>
+<li><strong>Option Type</strong>: Call or Put.</li>
+<li><strong>Strike Price</strong>: Predefined values ($95, $100, $105).</li>
+<li><strong>Expiration Date</strong>: December 20, 2024.</li>
+<li><strong>Option Price</strong>: Calculated using the Black-Scholes model.</li>
+<li><strong>Bid/Ask Prices</strong>: Derived from simulated bid-ask spreads.</li>
+<li><strong>Implied Volatility</strong>: Fixed at 20%.</li>
+</ul>
+<hr>
+<h4 id="assumptions-and-limitations">3. <strong>Assumptions and Limitations</strong></h4>
+<ol>
+<li><strong>European Approximation</strong>: While American options allow early exercise, their prices were approximated using the Black-Scholes model for simplicity.</li>
+<li><strong>Static Implied Volatility</strong>: The implied volatility was fixed at 20%. Real-world volatility often fluctuates intraday.</li>
+<li><strong>Risk-Free Rate</strong>: Assumed constant at 5%.</li>
+<li><strong>No Transaction Costs or Liquidity Constraints</strong>: These were excluded for simplicity.</li>
+<li><strong>Uniform Bid-Ask Spreads</strong>: Real-world spreads depend on factors like option moneyness and market liquidity.</li>
+</ol>
+<hr>
+<h4 id="conclusion">4. <strong>Conclusion</strong></h4>
+<p>The simulation provides a realistic representation of high-frequency options data for a single trading hour. The dataset includes second-by-second updates with dynamically calculated option prices, Greeks, and bid-ask spreads. While some assumptions simplify real-world complexities, the data can serve as a robust foundation for research or algorithmic trading experiments.</p>
+<p>If further refinements or customizations (e.g., dynamic implied volatility or jump diffusion modeling) are needed, additional steps can be implemented.</p>
+<h3 id="report-simulating-high-frequency-american-options-data-1">Report: Simulating High-Frequency American Options Data</h3>
+<h4 id="objective-1">1. <strong>Objective</strong></h4>
+<p>The purpose of this simulation was to generate high-frequency tick-level options data (with updates every second) for research purposes. The dataset reflects realistic market dynamics based on historical benchmarks and includes information such as option prices, underlying prices, Greeks, implied volatility, and bid-ask spreads.</p>
+<hr>
+<h4 id="methodology-1">2. <strong>Methodology</strong></h4>
+<h5 id="underlying-asset-simulation-1">2.1 Underlying Asset Simulation</h5>
+<p>The underlying asset’s price was simulated using a <strong>Geometric Brownian Motion (GBM)</strong> model:</p>
+<p>[<br>
+S_{t+\Delta t} = S_t \cdot \exp\left((\mu - 0.5\sigma^2)\Delta t + \sigma\sqrt{\Delta t}Z\right)<br>
+]</p>
+<p>Where:</p>
+<ul>
+<li>(S_t): Current underlying price.</li>
+<li>(\mu): Annualized drift (expected return).</li>
+<li>(\sigma): Annualized volatility.</li>
+<li>(\Delta t): Time step size (1 second in this case).</li>
+<li>(Z): Standard normal random variable.</li>
+</ul>
+<p>Parameters:</p>
+<ul>
+<li><strong>Starting Price</strong>: $100</li>
+<li><strong>Drift</strong>: 5% annualized.</li>
+<li><strong>Volatility</strong>: 20% annualized.</li>
+<li><strong>Time Step</strong>: One second.</li>
+</ul>
+<p>This process ensures realistic price evolution over a one-hour trading window (3600 seconds).</p>
+<hr>
+<h5 id="option-price-calculation-1">2.2 Option Price Calculation</h5>
+<p>Option prices were calculated using the <strong>Black-Scholes Formula</strong>, which provides closed-form solutions for European-style options. While American options allow early exercise, this simulation approximates their prices using the Black-Scholes method.</p>
+<p>The formula for a call option is:<br>
+[<br>
+C = S \cdot N(d_1) - K \cdot e^{-rT} \cdot N(d_2)<br>
+]<br>
+And for a put option:<br>
+[<br>
+P = K \cdot e^{-rT} \cdot N(-d_2) - S \cdot N(-d_1)<br>
+]</p>
+<p>Where:</p>
+<ul>
+<li>(d_1 = \frac{\ln(S / K) + (r + 0.5\sigma^2)T}{\sigma\sqrt{T}})</li>
+<li>(d_2 = d_1 - \sigma\sqrt{T})</li>
+<li>(N(\cdot)): Cumulative distribution function of the standard normal distribution.</li>
+<li>(S): Current underlying price.</li>
+<li>(K): Strike price.</li>
+<li>(T): Time to expiration (in years).</li>
+<li>(r): Risk-free rate (assumed to be 5%).</li>
+<li>(\sigma): Implied volatility (assumed constant at 20%).</li>
+</ul>
+<h5 id="strike-prices-and-expirations-1">2.3 Strike Prices and Expirations</h5>
+<ul>
+<li>Strike prices: $95, $100, and $105.</li>
+<li>Expiration: December 20, 2024.</li>
+<li>Time to expiration ((T)) was dynamically calculated for each tick.</li>
+</ul>
+<hr>
+<h5 id="bid-ask-spread-simulation-1">2.4 Bid-Ask Spread Simulation</h5>
+<p>To simulate market microstructure:</p>
+<ul>
+<li>A random bid-ask spread was added to the calculated option prices.</li>
+<li>Spread values were uniformly sampled between $0.01 and $0.05.</li>
+<li>Bid price = (\text{Option Price} - \text{Spread})</li>
+<li>Ask price = (\text{Option Price} + \text{Spread})</li>
+</ul>
+<hr>
+<h5 id="data-fields-1">2.5 Data Fields</h5>
+<p>For each second, the dataset includes:</p>
+<ul>
+<li><strong>Timestamp</strong>: Precise second of the simulated trading day.</li>
+<li><strong>Underlying Price</strong>: Simulated using GBM.</li>
+<li><strong>Option Type</strong>: Call or Put.</li>
+<li><strong>Strike Price</strong>: Predefined values ($95, $100, $105).</li>
+<li><strong>Expiration Date</strong>: December 20, 2024.</li>
+<li><strong>Option Price</strong>: Calculated using the Black-Scholes model.</li>
+<li><strong>Bid/Ask Prices</strong>: Derived from simulated bid-ask spreads.</li>
+<li><strong>Implied Volatility</strong>: Fixed at 20%.</li>
+</ul>
+<hr>
+<h4 id="assumptions-and-limitations-1">3. <strong>Assumptions and Limitations</strong></h4>
+<ol>
+<li><strong>European Approximation</strong>: While American options allow early exercise, their prices were approximated using the Black-Scholes model for simplicity.</li>
+<li><strong>Static Implied Volatility</strong>: The implied volatility was fixed at 20%. Real-world volatility often fluctuates intraday.</li>
+<li><strong>Risk-Free Rate</strong>: Assumed constant at 5%.</li>
+<li><strong>No Transaction Costs or Liquidity Constraints</strong>: These were excluded for simplicity.</li>
+<li><strong>Uniform Bid-Ask Spreads</strong>: Real-world spreads depend on factors like option moneyness and market liquidity.</li>
+</ol>
+<hr>
+<h4 id="conclusion-1">4. <strong>Conclusion</strong></h4>
+<p>The simulation provides a realistic representation of high-frequency options data for a single trading hour. The dataset includes second-by-second updates with dynamically calculated option prices, Greeks, and bid-ask spreads. While some assumptions simplify real-world complexities, the data can serve as a robust foundation for research or algorithmic trading experiments.</p>
+<p>If further refinements or customizations (e.g., dynamic implied volatility or jump diffusion modeling) are needed, additional steps can be implemented.</p>
+</div>
+</body>
+
+</html>
